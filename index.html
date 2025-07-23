@@ -49,46 +49,62 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-2">
 
-    <div class="w-full max-w-sm mx-auto bg-black rounded-3xl shadow-2xl p-4 sm:p-6 space-y-2 relative overflow-hidden">
+    <!--
+      Container chính của máy tính.
+      - w-full: Chiếm toàn bộ chiều rộng trên màn hình nhỏ.
+      - max-w-xs sm:max-w-sm md:max-w-md: Giới hạn chiều rộng tối đa, co giãn theo kích thước màn hình (rất nhỏ, nhỏ, vừa).
+      - mx-auto: Tự động căn giữa theo chiều ngang.
+      - relative overflow-hidden: Cần thiết cho các panel con.
+    -->
+    <div class="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto bg-black rounded-3xl shadow-2xl p-4 sm:p-6 space-y-2 relative overflow-hidden">
         <!-- Màn hình hiển thị -->
         <div id="display" class="bg-gray-800 text-right rounded-xl p-4 break-words border-2 border-gray-700 relative">
             <div id="memory-indicator" class="digital-font absolute top-2 left-3 text-cyan-200/70 text-lg"></div>
-            <div id="history-preview" class="digital-font text-cyan-200/60 text-2xl h-8"></div>
-            <div id="current-operand" class="digital-font text-cyan-300 text-6xl sm:text-7xl h-20 flex items-end justify-end">0</div>
+            <div id="history-preview" class="digital-font text-cyan-200/60 text-xl md:text-2xl h-8"></div>
+            <!--
+              Màn hình hiển thị số hiện tại.
+              - text-5xl sm:text-6xl md:text-7xl: Kích thước chữ co giãn theo kích thước màn hình.
+            -->
+            <div id="current-operand" class="digital-font text-cyan-300 text-5xl sm:text-6xl md:text-7xl h-20 flex items-end justify-end">0</div>
         </div>
 
         <!-- Lưới các nút bấm -->
         <div class="grid grid-cols-4 gap-3 sm:gap-4">
+            <!--
+              Các nút bấm.
+              - text-lg sm:text-xl...: Kích thước chữ trên nút co giãn theo màn hình.
+              - aspect-square: Đảm bảo các nút luôn là hình vuông, duy trì tỷ lệ khi co giãn.
+            -->
             <!-- Hàng chức năng -->
-            <button data-memory="mc" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MC</button>
-            <button data-memory="m+" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M+</button>
-            <button data-memory="m-" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M-</button>
-            <button data-memory="mr" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MR</button>
+            <button data-memory="mc" class="calculator-button bg-gray-700 text-white text-lg sm:text-xl md:text-2xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MC</button>
+            <button data-memory="m+" class="calculator-button bg-gray-700 text-white text-lg sm:text-xl md:text-2xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M+</button>
+            <button data-memory="m-" class="calculator-button bg-gray-700 text-white text-lg sm:text-xl md:text-2xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M-</button>
+            <button data-memory="mr" class="calculator-button bg-gray-700 text-white text-lg sm:text-xl md:text-2xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MR</button>
             
             <!-- Hàng 1 -->
-            <button data-action="clear" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">C</button>
-            <button data-action="delete" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">DEL</button>
-            <button data-action="percent" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">%</button>
-            <button data-operator="/" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">÷</button>
+            <button data-action="clear" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">C</button>
+            <button data-action="delete" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">DEL</button>
+            <button data-action="percent" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">%</button>
+            <button data-operator="/" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">÷</button>
 
             <!-- Các hàng nút khác -->
-            <button data-number="7" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">7</button>
-            <button data-number="8" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">8</button>
-            <button data-number="9" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">9</button>
-            <button data-operator="*" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">×</button>
-            <button data-number="4" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">4</button>
-            <button data-number="5" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">5</button>
-            <button data-number="6" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">6</button>
-            <button data-operator="-" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">−</button>
-            <button data-number="1" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">1</button>
-            <button data-number="2" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">2</button>
-            <button data-number="3" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">3</button>
-            <button data-operator="+" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">+</button>
-            <button data-number="0" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl col-span-2 text-left pl-7 hover:bg-gray-500">0</button>
-            <button data-number="." class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">.</button>
-            <button data-action="equals" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">=</button>
+            <button data-number="7" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">7</button>
+            <button data-number="8" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">8</button>
+            <button data-number="9" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">9</button>
+            <button data-operator="*" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">×</button>
+            <button data-number="4" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">4</button>
+            <button data-number="5" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">5</button>
+            <button data-number="6" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">6</button>
+            <button data-operator="-" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">−</button>
+            <button data-number="1" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">1</button>
+            <button data-number="2" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">2</button>
+            <button data-number="3" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">3</button>
+            <button data-operator="+" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">+</button>
+            <button data-number="0" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl col-span-2 text-left pl-7 hover:bg-gray-500">0</button>
+            <button data-number="." class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">.</button>
+            <button data-action="equals" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl md:text-4xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">=</button>
         </div>
         
         <!-- Nút Lịch sử & Hướng dẫn -->

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Tính Điện Tử với Hướng Dẫn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://www.cssscript.com/demo/retro-digital-clock-font-dseg/css/dseg.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden; 
+        }
+        .calculator-button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+        .calculator-button:active {
+            transform: scale(0.95);
+        }
+        .digital-font {
+            font-family: 'DSEG7Classic-Bold', 'DSEG7 Classic', sans-serif;
+            letter-spacing: 2px;
+        }
+        #history-panel {
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(100%);
+        }
+        #history-panel.is-open {
+            transform: translateY(0);
+        }
+        /* Styles for the modal */
+        #help-modal {
+            transition: opacity 0.3s ease-in-out;
+        }
+        #help-modal.hidden {
+            pointer-events: none;
+            opacity: 0;
+        }
+        #help-modal .modal-content {
+            transition: transform 0.3s ease-in-out;
+            transform: scale(0.95);
+        }
+        #help-modal:not(.hidden) .modal-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-sm mx-auto bg-black rounded-3xl shadow-2xl p-4 sm:p-6 space-y-2 relative overflow-hidden">
+        <!-- Màn hình hiển thị -->
+        <div id="display" class="bg-gray-800 text-right rounded-xl p-4 break-words border-2 border-gray-700 relative">
+            <div id="memory-indicator" class="digital-font absolute top-2 left-3 text-cyan-200/70 text-lg"></div>
+            <div id="history-preview" class="digital-font text-cyan-200/60 text-2xl h-8"></div>
+            <div id="current-operand" class="digital-font text-cyan-300 text-6xl sm:text-7xl h-20 flex items-end justify-end">0</div>
+        </div>
+
+        <!-- Lưới các nút bấm -->
+        <div class="grid grid-cols-4 gap-3 sm:gap-4">
+            <!-- Hàng chức năng -->
+            <button data-memory="mc" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MC</button>
+            <button data-memory="m+" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M+</button>
+            <button data-memory="m-" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">M-</button>
+            <button data-memory="mr" class="calculator-button bg-gray-700 text-white text-xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-600">MR</button>
+            
+            <!-- Hàng 1 -->
+            <button data-action="clear" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">C</button>
+            <button data-action="delete" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">DEL</button>
+            <button data-action="percent" class="calculator-button bg-gray-400 text-black text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-300">%</button>
+            <button data-operator="/" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">÷</button>
+
+            <!-- Các hàng nút khác -->
+            <button data-number="7" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">7</button>
+            <button data-number="8" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">8</button>
+            <button data-number="9" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">9</button>
+            <button data-operator="*" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">×</button>
+            <button data-number="4" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">4</button>
+            <button data-number="5" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">5</button>
+            <button data-number="6" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">6</button>
+            <button data-operator="-" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">−</button>
+            <button data-number="1" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">1</button>
+            <button data-number="2" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">2</button>
+            <button data-number="3" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">3</button>
+            <button data-operator="+" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">+</button>
+            <button data-number="0" class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl col-span-2 text-left pl-7 hover:bg-gray-500">0</button>
+            <button data-number="." class="calculator-button bg-gray-600 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-gray-500">.</button>
+            <button data-action="equals" class="calculator-button bg-orange-500 text-white text-2xl sm:text-3xl p-4 rounded-2xl aspect-square flex items-center justify-center hover:bg-orange-400">=</button>
+        </div>
+        
+        <!-- Nút Lịch sử & Hướng dẫn -->
+        <div class="flex justify-center items-center space-x-6 mt-2">
+             <button id="history-toggle" class="text-gray-400 hover:text-white transition-colors">Lịch sử</button>
+             <button id="help-toggle" class="text-gray-400 hover:text-white transition-colors flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Hướng dẫn
+             </button>
+        </div>
+    </div>
+    
+    <!-- Bảng Lịch sử -->
+    <div id="history-panel" class="fixed bottom-0 left-0 right-0 h-2/3 bg-gray-800 border-t-2 border-orange-500 rounded-t-3xl shadow-lg p-4 flex flex-col z-40">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-white text-2xl font-bold">Lịch sử Phép tính</h2>
+            <button id="clear-history" class="text-orange-400 hover:text-orange-300">Xóa</button>
+        </div>
+        <div id="history-list" class="flex-grow overflow-y-auto space-y-2 text-right pr-2"></div>
+        <button id="close-history" class="mt-4 bg-orange-500 text-white py-2 rounded-lg w-full hover:bg-orange-400">Đóng</button>
+    </div>
+
+    <!-- Modal Hướng dẫn -->
+    <div id="help-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div class="modal-content bg-gray-800 text-white rounded-2xl shadow-lg p-6 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4 text-orange-400">Hướng dẫn Chức năng Bộ nhớ</h2>
+            <div class="space-y-3 text-gray-300">
+                <p><strong class="font-bold text-white">MC (Memory Clear):</strong> Nhấn để <span class="text-orange-300">xóa</span> toàn bộ số đang được lưu trong bộ nhớ (đặt bộ nhớ về 0).</p>
+                <p><strong class="font-bold text-white">MR (Memory Recall):</strong> Nhấn để <span class="text-orange-300">lấy</span> số từ bộ nhớ ra màn hình chính. Thao tác này không xóa số khỏi bộ nhớ.</p>
+                <p><strong class="font-bold text-white">M+ (Memory Add):</strong> Nhấn để <span class="text-orange-300">cộng</span> số đang hiển thị trên màn hình vào số đang được lưu trong bộ nhớ.</p>
+                <p><strong class="font-bold text-white">M- (Memory Subtract):</strong> Nhấn để <span class="text-orange-300">trừ</span> số đang hiển thị trên màn hình khỏi số đang được lưu trong bộ nhớ.</p>
+                <hr class="border-gray-600">
+                <p><strong class="font-bold text-white">Chỉ báo "M":</strong> Ký tự "M" sẽ xuất hiện ở góc trên bên trái màn hình khi có một giá trị khác 0 được lưu trong bộ nhớ.</p>
+            </div>
+            <button id="close-help" class="mt-6 bg-orange-500 text-white py-2 rounded-lg w-full hover:bg-orange-400">Đã hiểu</button>
+        </div>
+    </div>
+
+
+    <script>
+        // DOM Elements
+        const currentOperandEl = document.getElementById('current-operand');
+        const historyPreviewEl = document.getElementById('history-preview');
+        const memoryIndicatorEl = document.getElementById('memory-indicator');
+        const buttons = document.querySelectorAll('button');
+        const historyPanel = document.getElementById('history-panel');
+        const historyList = document.getElementById('history-list');
+        const historyToggleBtn = document.getElementById('history-toggle');
+        const closeHistoryBtn = document.getElementById('close-history');
+        const clearHistoryBtn = document.getElementById('clear-history');
+        const helpModal = document.getElementById('help-modal');
+        const helpToggleBtn = document.getElementById('help-toggle');
+        const closeHelpBtn = document.getElementById('close-help');
+
+        // Calculator State
+        let currentOperand = '0';
+        let previousOperand = '';
+        let operation = undefined;
+        let shouldResetScreen = false;
+        let memory = 0;
+        let history = [];
+
+        // --- Main Logic ---
+        function clear() { currentOperand = '0'; previousOperand = ''; operation = undefined; shouldResetScreen = false; updateDisplay(); }
+        function deleteLast() { if (shouldResetScreen) return; if (currentOperand.length <= 1) { currentOperand = '0'; } else { currentOperand = currentOperand.slice(0, -1); } updateDisplay(); }
+        function appendNumber(number) { if (shouldResetScreen) { currentOperand = ''; shouldResetScreen = false; } if (currentOperand === '0' && number !== '.') currentOperand = ''; if (number === '.' && currentOperand.includes('.')) return; if (currentOperand.length > 12) return; currentOperand += number; updateDisplay(); }
+        function calculatePercent() { if (currentOperand === '0') return; currentOperand = (parseFloat(currentOperand) / 100).toString(); shouldResetScreen = true; updateDisplay(); }
+        function chooseOperation(op) { if (currentOperand === '' && previousOperand === '') return; if (currentOperand === '' && previousOperand !== '') { operation = op; updateDisplay(); return; } if (previousOperand !== '') { compute(); } operation = op; previousOperand = currentOperand; currentOperand = ''; updateDisplay(); }
+        function compute() { let computation; const prev = parseFloat(previousOperand); const current = parseFloat(currentOperand); if (isNaN(prev) || isNaN(current)) return; const calculationString = `${previousOperand} ${operation === '*' ? '×' : operation === '/' ? '÷' : operation} ${current}`; switch (operation) { case '+': computation = prev + current; break; case '-': computation = prev - current; break; case '*': computation = prev * current; break; case '/': if (current === 0) { currentOperandEl.innerText = "ERROR"; setTimeout(clear, 1000); return; } computation = prev / current; break; default: return; } const result = parseFloat(computation.toPrecision(12)); addToHistory(calculationString, result); currentOperand = result.toString(); operation = undefined; previousOperand = ''; shouldResetScreen = true; updateDisplay(); }
+        function handleMemory(memOp) { const currentVal = parseFloat(currentOperand); if (isNaN(currentVal) && memOp !== 'mc' && memOp !== 'mr') return; switch(memOp) { case 'mc': memory = 0; break; case 'm+': memory += currentVal; break; case 'm-': memory -= currentVal; break; case 'mr': currentOperand = memory.toString(); shouldResetScreen = true; updateDisplay(); break; } updateMemoryIndicator(); }
+        
+        // --- History Logic ---
+        function addToHistory(calculation, result) { history.unshift({ calculation, result }); if (history.length > 20) { history.pop(); } updateHistoryDisplay(); }
+        function updateHistoryDisplay() { historyList.innerHTML = ''; if (history.length === 0) { historyList.innerHTML = '<p class="text-gray-400 text-center">Chưa có lịch sử</p>'; return; } history.forEach(item => { const entry = document.createElement('div'); entry.className = 'text-white p-2 rounded-lg bg-gray-700/50'; entry.innerHTML = `<p class="text-gray-400 text-sm">${item.calculation} =</p><p class="text-xl font-bold">${item.result}</p>`; historyList.appendChild(entry); }); }
+        function clearHistory() { history = []; updateHistoryDisplay(); }
+
+        // --- Display Updates ---
+        function updateDisplay() { currentOperandEl.innerText = currentOperand; if (operation != null) { historyPreviewEl.innerText = `${previousOperand} ${operation === '*' ? '×' : operation === '/' ? '÷' : operation}`; } else { historyPreviewEl.innerText = ''; } }
+        function updateMemoryIndicator() { if (memory !== 0) { memoryIndicatorEl.innerText = 'M'; } else { memoryIndicatorEl.innerText = ''; } }
+
+        // --- Event Listeners ---
+        buttons.forEach(button => { button.addEventListener('click', () => { if (button.dataset.number) appendNumber(button.dataset.number); if (button.dataset.operator) chooseOperation(button.dataset.operator); if (button.dataset.action === 'equals') compute(); if (button.dataset.action === 'clear') clear(); if (button.dataset.action === 'delete') deleteLast(); if (button.dataset.action === 'percent') calculatePercent(); if (button.dataset.memory) handleMemory(button.dataset.memory); }); });
+        
+        // History Panel Listeners
+        historyToggleBtn.addEventListener('click', () => historyPanel.classList.add('is-open'));
+        closeHistoryBtn.addEventListener('click', () => historyPanel.classList.remove('is-open'));
+        clearHistoryBtn.addEventListener('click', clearHistory);
+        
+        // Help Modal Listeners
+        helpToggleBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+        closeHelpBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) { helpModal.classList.add('hidden'); } });
+
+        // Keyboard support
+        window.addEventListener('keydown', (e) => { const key = e.key; const button = document.querySelector(`button[data-number="${key}"], button[data-operator="${key}"]`); if (button) button.click(); else if (key === '*') document.querySelector(`button[data-operator="*"]`).click(); else if (key === '/') document.querySelector(`button[data-operator="/"]`).click(); else if (key === 'Enter' || key === '=') { e.preventDefault(); document.querySelector(`button[data-action="equals"]`).click(); } else if (key === 'Backspace') document.querySelector(`button[data-action="delete"]`).click(); else if (key === 'Escape' || key.toLowerCase() === 'c') document.querySelector(`button[data-action="clear"]`).click(); else if (key === '%') document.querySelector(`button[data-action="percent"]`).click(); });
+        
+        // Initial setup
+        updateHistoryDisplay();
+    </script>
+</body>
+</html>
